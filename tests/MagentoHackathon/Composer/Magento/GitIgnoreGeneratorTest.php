@@ -11,7 +11,6 @@ use Composer\Config;
 
 class GitIgnoreGeneratorTest extends InstallerTest
 {
-    
     protected function getGitIgnoreTestPath()
     {
         return $this->magentoDir . '/.gitignore';
@@ -75,7 +74,7 @@ class GitIgnoreGeneratorTest extends InstallerTest
             ->setMethods(array('appendGitIgnore'))
             ->getMock();
         
-        $mockInstaller->setDeployManager( new DeployManager( $this->io ) );
+        $mockInstaller->setDeployManager(new DeployManager($this->io));
 
         $mockInstaller->expects($this->never())
             ->method('appendGitIgnore');
@@ -106,7 +105,7 @@ class GitIgnoreGeneratorTest extends InstallerTest
             ->method('appendGitIgnore')
             ->with($package, $gitIgnoreFile);
 
-        $mockInstaller->setDeployManager( new DeployManager( $this->io ) );
+        $mockInstaller->setDeployManager(new DeployManager($this->io));
 
         $mockInstaller->install($this->repository, $package);
     }

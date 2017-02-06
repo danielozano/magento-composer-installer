@@ -121,7 +121,7 @@ class PathMappingTranslationTest extends InstallerTest
         $package = $this->createPathMappingTranslationMock();
         $mappings = $this->object->getParser($package)->getMappings();
 
-        $this->assertContains(array('src2/js', 'public/js/examplename'),$mappings);
+        $this->assertContains(array('src2/js', 'public/js/examplename'), $mappings);
     }
 
     /**

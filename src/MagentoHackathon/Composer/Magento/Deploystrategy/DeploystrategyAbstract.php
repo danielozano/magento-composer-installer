@@ -26,7 +26,7 @@ abstract class DeploystrategyAbstract
 
     /**
      * The List of entries which files should not get deployed
-     * 
+     *
      * @var array
      */
     protected $ignoredMappings = array();
@@ -73,7 +73,7 @@ abstract class DeploystrategyAbstract
     public function deploy()
     {
         foreach ($this->getMappings() as $data) {
-            list ($source, $dest) = $data;
+            list($source, $dest) = $data;
             $this->setCurrentMapping($data);
             $this->create($source, $dest);
         }
@@ -88,7 +88,7 @@ abstract class DeploystrategyAbstract
     public function clean()
     {
         foreach ($this->getMappings() as $data) {
-            list ($source, $dest) = $data;
+            list($source, $dest) = $data;
             $this->remove($source, $dest);
             $this->rmEmptyDirsRecursive(dirname($dest), $this->getDestDir());
         }
@@ -178,7 +178,7 @@ abstract class DeploystrategyAbstract
 
     /**
      * sets the current ignored mappings
-     * 
+     *
      * @param $ignoredMappings
      */
     public function setIgnoredMappings($ignoredMappings)
@@ -188,7 +188,7 @@ abstract class DeploystrategyAbstract
 
     /**
      * gets the current ignored mappings
-     * 
+     *
      * @return array
      */
     public function getIgnoredMappings()
@@ -202,13 +202,13 @@ abstract class DeploystrategyAbstract
      *
      * @return bool
      */
-    protected  function isDestinationIgnored($destination)
+    protected function isDestinationIgnored($destination)
     {
         $destination = '/'.$destination;
-        $destination = str_replace('/./','/', $destination);
-        $destination = str_replace('//','/', $destination);
-        foreach($this->ignoredMappings as $ignored){
-            if( 0 === strpos($ignored,$destination) ){
+        $destination = str_replace('/./', '/', $destination);
+        $destination = str_replace('//', '/', $destination);
+        foreach ($this->ignoredMappings as $ignored) {
+            if (0 === strpos($ignored, $destination)) {
                 return true;
             }
         }
@@ -225,7 +225,7 @@ abstract class DeploystrategyAbstract
 
     protected function removeTrailingSlash($path)
     {
-       return rtrim($path, ' \\/');
+        return rtrim($path, ' \\/');
     }
 
     /**
@@ -240,7 +240,7 @@ abstract class DeploystrategyAbstract
      */
     public function create($source, $dest)
     {
-        if($this->isDestinationIgnored($dest)){
+        if ($this->isDestinationIgnored($dest)) {
             return;
         }
         
@@ -398,9 +398,9 @@ abstract class DeploystrategyAbstract
     public static function rmdirRecursive($dir)
     {
         $fs = new \Composer\Util\Filesystem();
-        if(is_dir($dir)){
+        if (is_dir($dir)) {
             $result = $fs->removeDirectory($dir);
-        }else{
+        } else {
             @unlink($dir);
         }
         
@@ -418,5 +418,4 @@ abstract class DeploystrategyAbstract
      * @return bool
      */
     abstract protected function createDelegate($source, $dest);
-
 }

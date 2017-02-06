@@ -43,5 +43,4 @@ class NoneTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_dir($this->_getVfsUrl('sourceDir' . DS . $src)));
         $this->assertFalse(is_dir($this->_getVfsUrl('destDir' . DS . $dest)));
     }
-
 }

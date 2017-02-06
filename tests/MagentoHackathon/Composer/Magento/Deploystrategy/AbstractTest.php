@@ -1,7 +1,9 @@
 <?php
 namespace MagentoHackathon\Composer\Magento\Deploystrategy;
 
-if (! defined('DS')) define('DS', DIRECTORY_SEPARATOR);
+if (! defined('DS')) {
+    define('DS', DIRECTORY_SEPARATOR);
+}
 
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,14 +35,14 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      * @param string $dest
      * @return DeploystrategyAbstract
      */
-    abstract function getTestDeployStrategy($src, $dest);
+    abstract public function getTestDeployStrategy($src, $dest);
 
     /**
      * @abstract
      * @param bool $isDir
      * @return string
      */
-    abstract function getTestDeployStrategyFiletype($isDir = false);
+    abstract public function getTestDeployStrategyFiletype($isDir = false);
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -304,7 +306,6 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             $testTarget = $this->destDir . DS . $dest . DS . $file;
             $this->assertFileExists($testTarget);
             $this->assertFileType($testTarget, $this->getTestDeployStrategyFiletype());
-
         }
     }
 
@@ -348,7 +349,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             $this->tearDown();
             $this->setUp();
 
-            list ($globSource, $dest) = $fixture;
+            list($globSource, $dest) = $fixture;
             $sourceDirContent = "test.xml";
             $this->mkdir($this->sourceDir . DS . $globSource);
             touch($this->sourceDir . DS . $globSource . DS . $sourceDirContent);
@@ -381,7 +382,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             $this->tearDown();
             $this->setUp();
 
-            list ($globSource, $dest) = $fixture;
+            list($globSource, $dest) = $fixture;
             $sourceDirContent = "test.xml";
             $this->mkdir($this->sourceDir . DS . $globSource);
             touch($this->sourceDir . DS . $globSource . DS . $sourceDirContent);

@@ -1,45 +1,43 @@
 <?php
 /**
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  */
 
 namespace MagentoHackathon\Composer\Magento;
 
-
-class ProjectConfig {
-    
+class ProjectConfig
+{
     protected $libraryPath;
     protected $libraryPackages;
     
-    public function __construct( $extra )
+    public function __construct($extra)
     {
-        $this->applyDeprecatedRootConfigs( $extra );
-        if( isset($extra['magento-project']) ){
+        $this->applyDeprecatedRootConfigs($extra);
+        if (isset($extra['magento-project'])) {
             $this->applyMagentoConfig($extra['magento-project']);
         }
     }
     
-    protected function fetchVarFromConfigArray( $array, $key, $default=null ){
+    protected function fetchVarFromConfigArray($array, $key, $default=null)
+    {
         $result = $default;
-        if( isset($array[$key]) ){
+        if (isset($array[$key])) {
             $result = $array[$key];
         }
         return $result;
     }
     
-    protected function applyDeprecatedRootConfigs( $rootConfig )
+    protected function applyDeprecatedRootConfigs($rootConfig)
     {
-        
     }
     
-    protected function applyMagentoConfig( $config )
+    protected function applyMagentoConfig($config)
     {
-        $this->libraryPath          = $this->fetchVarFromConfigArray( $config, 'libraryPath');
-        $this->libraryPackages      = $this->fetchVarFromConfigArray( $config, 'libraries');
-        
+        $this->libraryPath          = $this->fetchVarFromConfigArray($config, 'libraryPath');
+        $this->libraryPackages      = $this->fetchVarFromConfigArray($config, 'libraries');
     }
     
     public function getLibraryPath()
@@ -47,12 +45,8 @@ class ProjectConfig {
         return $this->libraryPath;
     }
     
-    public function getLibraryConfigByPackagename( $packagename )
+    public function getLibraryConfigByPackagename($packagename)
     {
-        return $this->fetchVarFromConfigArray( $this->libraryPackages, $packagename );
+        return $this->fetchVarFromConfigArray($this->libraryPackages, $packagename);
     }
-    
-    
-    
-
 }

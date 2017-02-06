@@ -44,8 +44,8 @@ abstract class PathTranslationParser implements Parser
     protected function createPrefixVariants($translations)
     {
         $newTranslations = array();
-        foreach($translations as $key => $value) {
-            foreach($this->pathPrefixVariants as $variant) {
+        foreach ($translations as $key => $value) {
+            foreach ($this->pathPrefixVariants as $variant) {
                 $newTranslations[$variant.$key] = $value;
             }
         }
@@ -69,9 +69,9 @@ abstract class PathTranslationParser implements Parser
     {
         // each element of $mappings is an array with two elements; first is
         // the source and second is the target
-        foreach($mappings as &$mapping) {
-            foreach($this->pathPrefixTranslations as $prefix => $translate) {
-                if(strpos($mapping[1], $prefix) === 0) {
+        foreach ($mappings as &$mapping) {
+            foreach ($this->pathPrefixTranslations as $prefix => $translate) {
+                if (strpos($mapping[1], $prefix) === 0) {
                     // replace the old prefix with the translated version
                     $mapping[1] = $translate . substr($mapping[1], strlen($prefix));
                     // should never need to translate a prefix more than once

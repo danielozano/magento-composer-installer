@@ -1,16 +1,15 @@
 <?php
 /**
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  */
 
 namespace MagentoHackathon\Composer\Magento\Deploy\Manager;
 
-
-class Entry {
-
+class Entry
+{
     protected $packageName;
 
     /**
@@ -49,6 +48,4 @@ class Entry {
     {
         return $this->deployStrategy;
     }
-    
-    
 }

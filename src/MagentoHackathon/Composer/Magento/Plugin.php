@@ -77,7 +77,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $extra = $composer->getPackage()->getExtra();
         $sortPriority = isset($extra['magento-deploy-sort-priority']) ? $extra['magento-deploy-sort-priority'] : array();
         $this->deployManager->setSortPriority($sortPriority);
-
     }
 
 
@@ -242,7 +241,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             $filesystem->removeDirectory($libraryTargetPath);
             $filesystem->ensureDirectoryExists($libraryTargetPath);
             $this->copyRecursive($vendorDir . '/' . $package->getPrettyName(), $libraryTargetPath);
-
         }
 
         $autoloadGenerator = new AutoloadGenerator(new EventDispatcher($this->composer, $this->io));
@@ -261,11 +259,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             if ($this->io->isDebug()) {
                 $this->io->write('Magento deployLibraries autoload generator not availabel, you should require "theseer/autoload"');
                 var_dump($executable, getcwd());
-
             }
         }
-
-
     }
 
 
@@ -294,7 +289,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
                 copy($file->getPathname(), $targetPath);
             }
         }
-
     }
 
     /**

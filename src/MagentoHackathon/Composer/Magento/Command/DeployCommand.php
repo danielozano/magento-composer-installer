@@ -52,25 +52,24 @@ EOT
         $moduleInstaller = $im->getInstaller("magento-module");
 
 
-        $deployManager = new DeployManager( $this->getIO() );
+        $deployManager = new DeployManager($this->getIO());
 
         $extra          = $composer->getPackage()->getExtra();
         $sortPriority   = isset($extra['magento-deploy-sort-priority']) ? $extra['magento-deploy-sort-priority'] : array();
-        $deployManager->setSortPriority( $sortPriority );
+        $deployManager->setSortPriority($sortPriority);
 
 
 
-        $moduleInstaller->setDeployManager( $deployManager );
+        $moduleInstaller->setDeployManager($deployManager);
         
 
         foreach ($installedRepo->getPackages() as $package) {
-
             if ($input->getOption('verbose')) {
-                $output->writeln( $package->getName() );
-                $output->writeln( $package->getType() );
+                $output->writeln($package->getName());
+                $output->writeln($package->getType());
             }
 
-            if( $package->getType() != "magento-module" ){
+            if ($package->getType() != "magento-module") {
                 continue;
             }
             if ($input->getOption('verbose')) {
@@ -87,7 +86,6 @@ EOT
             $deployManagerEntry->setPackageName($package->getName());
             $deployManagerEntry->setDeployStrategy($strategy);
             $deployManager->addPackage($deployManagerEntry);
-            
         }
 
         $deployManager->doDeploy();
