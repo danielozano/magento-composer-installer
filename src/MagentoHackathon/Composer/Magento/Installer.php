@@ -54,7 +54,7 @@ class Installer extends LibraryInstaller implements InstallerInterface
      *
      * @var boolean
      */
-    protected $isDevMode = false;
+    protected $isDevMode = null;
 
     /**
      * The module's base directory
@@ -195,8 +195,6 @@ class Installer extends LibraryInstaller implements InstallerInterface
         if (!empty($extra['path-mapping-translations'])) {
             $this->_pathMappingTranslations = (array)$extra['path-mapping-translations'];
         }
-
-        $this->isDevMode = $this->io->askConfirmation("Is dev installation? [y/N]", false);
     }
 
 
@@ -414,6 +412,10 @@ class Installer extends LibraryInstaller implements InstallerInterface
             return;
         }
 
+        if (null === $this->isDevMode) {
+            $this->isDevMode = $this->io->askConfirmation("Is dev installation? [y/N]", false);
+        }
+
         parent::install($repo, $package);
 
         // skip marshal and apply default behavior if extra->map does not exist
@@ -615,6 +617,10 @@ class Installer extends LibraryInstaller implements InstallerInterface
     {
         if ($target->getType() === 'magento-core' && !$this->preUpdateMagentoCore()) {
             return;
+        }
+
+        if (null === $this->isDevMode) {
+            $this->isDevMode = $this->io->askConfirmation("Is dev installation? [y/N]", false);
         }
 
         // cleanup marshaled files if extra->map exist
