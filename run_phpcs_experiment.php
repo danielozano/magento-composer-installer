@@ -7,8 +7,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 //require __DIR__ . '/CodeSniffer.conf';
 //$GLOBALS['PHP_CODESNIFFER_CONFIG_DATA'] = $phpCodeSnifferConfig;
 
-if( !is_link(__DIR__.'/vendor/firegento/FireGento') ){
-    symlink( __DIR__.'/vendor/firegento/phpcs', __DIR__.'/vendor/firegento/FireGento');
+if (!is_link(__DIR__.'/vendor/firegento/FireGento')) {
+    symlink(__DIR__.'/vendor/firegento/phpcs', __DIR__.'/vendor/firegento/FireGento');
 }
 
 #$tempSnifferObject = new PHP_CodeSniffer;

@@ -6,7 +6,8 @@ namespace MagentoHackathon\Composer\Magento;
  * Class PackageTypes
  * @package MagentoHackathon\Composer\Magento
  */
-class PackageTypes {
+class PackageTypes
+{
 
     /**
      * Package Types supported by Installer

@@ -100,12 +100,12 @@ class Symlink extends DeploystrategyAbstract
         }
 
         // Create symlink
-        if(false === symlink($sourcePath, $destPath)) {
+        if (false === symlink($sourcePath, $destPath)) {
             throw new \ErrorException("An error occured while creating symlink" . $sourcePath);
         }
 
         // Check we where able to create the symlink
-        if(false === $destPath = readlink($destPath)){
+        if (false === $destPath = readlink($destPath)) {
             throw new \ErrorException("Symlink $destPath points to target $destPath");
         }
 

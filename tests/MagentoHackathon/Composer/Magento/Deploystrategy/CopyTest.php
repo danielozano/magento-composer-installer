@@ -19,7 +19,9 @@ class CopyTest extends AbstractTest
      */
     public function getTestDeployStrategyFiletype($isDir = false)
     {
-        if ($isDir) return self::TEST_FILETYPE_DIR;
+        if ($isDir) {
+            return self::TEST_FILETYPE_DIR;
+        }
 
         return self::TEST_FILETYPE_FILE;
     }
@@ -71,6 +73,5 @@ class CopyTest extends AbstractTest
         $this->strategy->deploy();
 
         $this->assertFileNotExists($this->destDir . DS . 'app' . DS . 'app' . DS . 'code' . DS . 'test.php');
-        
     }
 }

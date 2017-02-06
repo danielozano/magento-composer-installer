@@ -123,9 +123,7 @@ class PackageXmlParser extends PathTranslationParser
                             $map[] = array($relativePath, $relativePath);
                         }
                     }
-
-                }
-                catch (RuntimeException $e) {
+                } catch (RuntimeException $e) {
                     // Skip invalid targets
                     throw $e;
                     continue;
@@ -156,7 +154,6 @@ class PackageXmlParser extends PathTranslationParser
     protected function getTargetsDefinitions()
     {
         if (! $this->_targets) {
-
             $targets = simplexml_load_file(__DIR__ . '/../../../../res/target.xml');
             foreach ($targets as $target) {
                 $attributes = $target->attributes();
@@ -171,7 +168,8 @@ class PackageXmlParser extends PathTranslationParser
      * @return array
      * @throws RuntimeException
      */
-    protected function getElementPaths(\SimpleXMLElement $element) {
+    protected function getElementPaths(\SimpleXMLElement $element)
+    {
         $type = $element->getName();
         $name = $element->attributes()->name;
         $elementPaths = array();

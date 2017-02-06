@@ -8,7 +8,6 @@
 
 namespace MagentoHackathon\Composer\Magento;
 
-
 use Composer\IO\IOInterface;
 use MagentoHackathon\Composer\Magento\Deploy\Manager\Entry;
 use MagentoHackathon\Composer\Magento\Deploystrategy\Copy;
@@ -97,7 +96,6 @@ class DeployManager
                     $this->io->write($e->getMessage());
                 }
             }
-
         }
     }
 }

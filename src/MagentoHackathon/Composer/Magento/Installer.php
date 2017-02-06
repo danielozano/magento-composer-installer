@@ -49,6 +49,11 @@ class Installer extends LibraryInstaller implements InstallerInterface
      */
     protected $isForced = false;
 
+    /**
+     * Check if it's a dev installation
+     *
+     * @var boolean
+     */
     protected $isDevMode = false;
 
     /**
@@ -121,12 +126,11 @@ class Installer extends LibraryInstaller implements InstallerInterface
         parent::__construct($io, $composer, $type);
         $this->initializeVendorDir();
 
-        $this->annoy( $io );
+        $this->annoy($io);
 
         $extra = $composer->getPackage()->getExtra();
 
         if (isset($extra['magento-root-dir']) || $rootDirInput = $this->defaultMagentoRootDir) {
-
             if (isset($rootDirInput)) {
                 $extra['magento-root-dir'] = $rootDirInput;
             }
@@ -145,7 +149,6 @@ class Installer extends LibraryInstaller implements InstallerInterface
         }
 
         if (isset($extra['modman-root-dir'])) {
-
             $dir = rtrim(trim($extra['modman-root-dir']), '/\\');
             if (!is_dir($dir)) {
                 $dir = $this->vendorDir . "/$dir";
@@ -158,7 +161,7 @@ class Installer extends LibraryInstaller implements InstallerInterface
 
         if (isset($extra['magento-deploystrategy'])) {
             $this->_deployStrategy = (string)$extra['magento-deploystrategy'];
-            if($this->_deployStrategy !== "copy"){
+            if ($this->_deployStrategy !== "copy") {
                 $io->write("<warning>Warning: Magento 2 is not tested with \"{$this->_deployStrategy}\" deployment strategy. It may not function properly.</warning>");
             }
         }
@@ -198,13 +201,13 @@ class Installer extends LibraryInstaller implements InstallerInterface
     /**
      * @param DeployManager $deployManager
      */
-    public function setDeployManager( DeployManager $deployManager)
+    public function setDeployManager(DeployManager $deployManager)
     {
         $this->deployManager = $deployManager;
     }
 
     
-    public function setConfig( ProjectConfig $config )
+    public function setConfig(ProjectConfig $config)
     {
         $this->config = $config;
     }
@@ -220,7 +223,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
     /**
      * Create base requrements for project installation
      */
-    protected function initializeMagentoRootDir() {
+    protected function initializeMagentoRootDir()
+    {
         if (!$this->magentoRootDir->isDir()) {
             $magentoRootPath = $this->magentoRootDir->getPathname();
             $pathParts = explode(DIRECTORY_SEPARATOR, $magentoRootPath);
@@ -244,8 +248,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
      * @param \Composer\IO\IOInterface $io
      * @return int
      */
-    private function updateJsonExtra($extra, $io) {
-
+    private function updateJsonExtra($extra, $io)
+    {
         $file = Factory::getComposerFile();
 
         if (!file_exists($file) && !file_put_contents($file, "{\n}\n")) {
@@ -280,7 +284,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
         }
     }
 
-    private function updateFileCleanly($json, array $base, array $new, $rootKey) {
+    private function updateFileCleanly($json, array $base, array $new, $rootKey)
+    {
         $contents = file_get_contents($json->getPath());
 
         $manipulator = new JsonManipulator($contents);
@@ -317,26 +322,26 @@ class Installer extends LibraryInstaller implements InstallerInterface
             $strategy = $this->_deployStrategy;
         }
         $extra  = $this->composer->getPackage()->getExtra();
-        if( isset($extra['magento-deploystrategy-overwrite']) ){
+        if (isset($extra['magento-deploystrategy-overwrite'])) {
             $moduleSpecificDeployStrategys = $this->transformArrayKeysToLowerCase($extra['magento-deploystrategy-overwrite']);
-            if( isset($moduleSpecificDeployStrategys[$package->getName()]) ){
+            if (isset($moduleSpecificDeployStrategys[$package->getName()])) {
                 $strategy = $moduleSpecificDeployStrategys[$package->getName()];
             }
         }
         $moduleSpecificDeployIgnores = array();
-        if( isset($extra['magento-deploy-ignore']) ){
+        if (isset($extra['magento-deploy-ignore'])) {
             $extra['magento-deploy-ignore'] = $this->transformArrayKeysToLowerCase($extra['magento-deploy-ignore']);
-            if( isset($extra['magento-deploy-ignore']["*"]) ){
+            if (isset($extra['magento-deploy-ignore']["*"])) {
                 $moduleSpecificDeployIgnores = $extra['magento-deploy-ignore']["*"];
             }
-            if( isset($extra['magento-deploy-ignore'][$package->getName()]) ){
+            if (isset($extra['magento-deploy-ignore'][$package->getName()])) {
                 $moduleSpecificDeployIgnores = array_merge(
-                    $moduleSpecificDeployIgnores, 
+                    $moduleSpecificDeployIgnores,
                     $extra['magento-deploy-ignore'][$package->getName()]
                 );
             }
         }
-        if($package->getType() === 'magento-core'){
+        if ($package->getType() === 'magento-core') {
             $strategy = 'copy';
         }
         $targetDir = $this->getTargetDir();
@@ -403,7 +408,6 @@ class Installer extends LibraryInstaller implements InstallerInterface
      */
     public function install(InstalledRepositoryInterface $repo, PackageInterface $package)
     {
-
         if ($package->getType() === 'magento-core' && !$this->preInstallMagentoCore()) {
             return;
         }
@@ -452,20 +456,20 @@ class Installer extends LibraryInstaller implements InstallerInterface
     public function appendGitIgnore(PackageInterface $package, $ignoreFile)
     {
         $contents = array();
-        if(file_exists($ignoreFile)) {
+        if (file_exists($ignoreFile)) {
             $contents = file($ignoreFile, FILE_IGNORE_NEW_LINES);
         }
 
         $additions = array();
-        foreach($this->getParser($package)->getMappings() as $map) {
+        foreach ($this->getParser($package)->getMappings() as $map) {
             $dest   = $map[1];
             $ignore = sprintf("/%s", $dest);
-            $ignore = str_replace('/./','/', $ignore);
-            $ignore = str_replace('//','/', $ignore);
-            $ignore = rtrim($ignore,'/');
-            if(!in_array($ignore, $contents)) {
+            $ignore = str_replace('/./', '/', $ignore);
+            $ignore = str_replace('//', '/', $ignore);
+            $ignore = rtrim($ignore, '/');
+            if (!in_array($ignore, $contents)) {
                 $ignoredMappings = $this->getDeployStrategy($package)->getIgnoredMappings();
-                if( in_array($ignore, $ignoredMappings) ){
+                if (in_array($ignore, $ignoredMappings)) {
                     continue;
                 }
                 
@@ -473,7 +477,7 @@ class Installer extends LibraryInstaller implements InstallerInterface
             }
         }
 
-        if(!empty($additions)) {
+        if (!empty($additions)) {
             array_unshift($additions, '#' . $package->getName());
             $contents = array_merge($contents, $additions);
             file_put_contents($ignoreFile, implode("\n", $contents));
@@ -490,7 +494,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
      * @param InstalledRepositoryInterface $repo repository in which to check
      * @param PackageInterface $package package instance
      */
-    protected function preInstallMagentoCore() {
+    protected function preInstallMagentoCore()
+    {
         if (!$this->io->askConfirmation('<info>Are you sure you want to install the Magento core?</info><error>Attention: Your Magento root dir will be cleared in the process!</error> [<comment>Y,n</comment>] ', true)) {
             $this->io->write('Skipping core installation...');
             return false;
@@ -499,12 +504,14 @@ class Installer extends LibraryInstaller implements InstallerInterface
         return true;
     }
 
-    protected function clearRootDir() {
+    protected function clearRootDir()
+    {
         $this->filesystem->removeDirectory($this->magentoRootDir->getPathname());
         $this->filesystem->ensureDirectoryExists($this->magentoRootDir->getPathname());
     }
 
-    public function prepareMagentoCore() {
+    public function prepareMagentoCore()
+    {
         $this->setMagentoPermissions();
         $this->redeployProject();
     }
@@ -512,7 +519,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
     /**
      * some directories have to be writable for the server
      */
-    protected function setMagentoPermissions() {
+    protected function setMagentoPermissions()
+    {
         foreach ($this->_magentoWritableDirs as $dir) {
             if (!file_exists($this->getTargetDir() . DIRECTORY_SEPARATOR . $dir)) {
                 mkdir($this->getTargetDir() . DIRECTORY_SEPARATOR . $dir, 0777, true);
@@ -528,7 +536,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
      * @param int $dirmode Permissions to be set for directories
      * @param int $filemode Permissions to be set for files
      */
-    protected function setPermissions($path, $dirmode, $filemode) {
+    protected function setPermissions($path, $dirmode, $filemode)
+    {
         if (is_dir($path)) {
             if (!@chmod($path, $dirmode)) {
                 $this->io->write(
@@ -552,7 +561,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
         }
     }
 
-    protected function redeployProject() {
+    protected function redeployProject()
+    {
         $ioInterface = $this->io;
         // init repos
         $composer = $this->composer;
@@ -567,10 +577,9 @@ class Installer extends LibraryInstaller implements InstallerInterface
         $moduleInstaller = $im->getInstaller("magento-module");
 
         foreach ($installedRepo->getPackages() as $package) {
-
             if ($ioInterface->isVerbose()) {
                 $ioInterface->write($package->getName());
-            $ioInterface->write($package->getType());
+                $ioInterface->write($package->getType());
             }
 
             if ($package->getType() != "magento-module") {
@@ -582,7 +591,7 @@ class Installer extends LibraryInstaller implements InstallerInterface
 
             $strategy = $moduleInstaller->getDeployStrategy($package);
             if ($ioInterface->getOption('verbose')) {
-            $ioInterface->write("used " . get_class($strategy) . " as deploy strategy");
+                $ioInterface->write("used " . get_class($strategy) . " as deploy strategy");
             }
             $strategy->setMappings($moduleInstaller->getParser($package)->getMappings());
 
@@ -604,7 +613,6 @@ class Installer extends LibraryInstaller implements InstallerInterface
      */
     public function update(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target)
     {
-
         if ($target->getType() === 'magento-core' && !$this->preUpdateMagentoCore()) {
             return;
         }
@@ -634,7 +642,7 @@ class Installer extends LibraryInstaller implements InstallerInterface
             $this->deployManager->addPackage($deployManagerEntry);
         }
 
-        if($this->appendGitIgnore) {
+        if ($this->appendGitIgnore) {
             $this->appendGitIgnore($target, $this->getGitIgnoreFileLocation());
         }
 
@@ -644,7 +652,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
     }
 
 
-    protected function preUpdateMagentoCore() {
+    protected function preUpdateMagentoCore()
+    {
         if (!$this->io->askConfirmation('<info>Are you sure you want to manipulate the Magento core installation</info> [<comment>Y,n</comment>]? ', true)) {
             $this->io->write('Skipping core update...');
             return false;
@@ -656,7 +665,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
         return true;
     }
 
-    protected function postUpdateMagentoCore() {
+    protected function postUpdateMagentoCore()
+    {
         $tmpDir = $this->magentoRootDir->getPathname();
         $backupDir = $this->originalMagentoRootDir->getPathname() . self::MAGENTO_ROOT_DIR_BACKUP_SUFFIX;
         $this->backupMagentoRootDir = new \SplFileInfo($backupDir);
@@ -670,7 +680,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
         $this->cleanupPostUpdateMagentoCore();
     }
 
-    protected function cleanupPostUpdateMagentoCore() {
+    protected function cleanupPostUpdateMagentoCore()
+    {
         $rootDir = $this->magentoRootDir->getPathname();
         $backupDir = $this->backupMagentoRootDir->getPathname();
         $persistentFolders = array('media', 'var');
@@ -688,7 +699,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
         $this->clearMagentoCache();
     }
 
-    public function toggleMagentoMaintenanceMode($active = false) {
+    public function toggleMagentoMaintenanceMode($active = false)
+    {
         if (($targetDir = $this->getTargetDir()) && !$this->noMaintenanceMode) {
             $flagPath = $targetDir . DIRECTORY_SEPARATOR . self::MAGENTO_MAINTANANCE_FLAG;
             if ($active) {
@@ -701,7 +713,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
         }
     }
 
-    public function clearMagentoCache() {
+    public function clearMagentoCache()
+    {
         if (($targetDir = $this->getTargetDir()) && !$this->keepMagentoCache) {
             $magentoCachePath = $targetDir . DIRECTORY_SEPARATOR . self::MAGENTO_CACHE_PATH;
             if ($this->filesystem->removeDirectory($magentoCachePath)) {
@@ -821,7 +834,7 @@ class Installer extends LibraryInstaller implements InstallerInterface
     public function transformArrayKeysToLowerCase($array)
     {
         $arrayNew = array();
-        foreach($array as $key=>$value){
+        foreach ($array as $key=>$value) {
             $arrayNew[strtolower($key)] = $value;
         }
         return $arrayNew;
@@ -831,7 +844,7 @@ class Installer extends LibraryInstaller implements InstallerInterface
      * this function is for annoying people with messages.
      *
      * First usage: get people to vote about the future release of composer so later I can say "you wanted it this way"
-     * 
+     *
      * @param IOInterface $io
      */
     public function annoy(IOInterface $io)
@@ -844,7 +857,7 @@ class Installer extends LibraryInstaller implements InstallerInterface
         $io->write('<comment> time for voting about the future of the #magento #composer installer. </comment>', true);
         $io->write('<comment> https://github.com/magento-hackathon/magento-composer-installer/blob/discussion-master/Milestone/2/index.md </comment>', true);
         $io->write('<error> For the case you don\'t vote, I will ignore your problems till iam finished with the resulting release. </error>', true);
-         * 
+         *
          **/
     }
 
@@ -854,7 +867,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
      * @param PackageInterface $package
      * @return bool
      */
-    private function hasExtraMap(PackageInterface $package) {
+    private function hasExtraMap(PackageInterface $package)
+    {
         $packageExtra = $package->getExtra();
         if (isset($packageExtra['map'])) {
             return true;

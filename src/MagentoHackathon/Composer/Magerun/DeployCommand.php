@@ -10,7 +10,7 @@ class DeployCommand extends AbstractMagentoCommand
 {
     protected function configure()
     {
-      $this
+        $this
           ->setName('composer:magento:deploy')
           ->setDescription('Test command registered in a module')
       ;
@@ -23,7 +23,6 @@ class DeployCommand extends AbstractMagentoCommand
     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        
         $output->writeln('it works, maybe');
     }
 }

@@ -1,9 +1,9 @@
 <?php
 /**
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  */
 
 namespace MagentoHackathon\Composer\Magento\FullStack;
@@ -13,7 +13,6 @@ use Symfony\Component\Process\Process;
 
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
-
     protected static $processLogCounter = 1;
 
     public static function setUpBeforeClass()
@@ -42,15 +41,14 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             self::getProjectRoot()
         );
         $process->run();
-        if( $process->getExitCode() !== 0){
+        if ($process->getExitCode() !== 0) {
             $message = 'process for <code>'.$process->getCommandLine().'</code> exited with '.$process->getExitCode().': '.$process->getExitCodeText();
             $message .= PHP_EOL.'Error Message:'.PHP_EOL.$process->getErrorOutput();
             $message .= PHP_EOL.'Output:'.PHP_EOL.$process->getOutput();
             echo $message;
-        }else{
-            self::logProcessOutput($process,'createComposerArtifact');
+        } else {
+            self::logProcessOutput($process, 'createComposerArtifact');
         }
-
     }
     
     public static function tearDownAfterClass()
@@ -68,32 +66,37 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    protected static function getBasePath(){
+    protected static function getBasePath()
+    {
         return realpath(__DIR__.'/../../../../FullStackTest');
     }
 
-    protected static function getProjectRoot(){
+    protected static function getProjectRoot()
+    {
         return realpath(__DIR__.'/../../../../..');
     }
 
-    protected static function getComposerCommand(){
+    protected static function getComposerCommand()
+    {
         $command = 'composer.phar';
-        if( getenv('TRAVIS') == "true" ){
+        if (getenv('TRAVIS') == "true") {
             $command = self::getProjectRoot().'/composer.phar';
         }
         return $command;
     }
 
-    protected static function getComposerArgs(){
+    protected static function getComposerArgs()
+    {
         return '--prefer-dist --no-dev --no-progress --no-interaction --profile -vvv';
     }
 
-    protected static function logProcessOutput(Process $process, $name = null){
-        if($name === null){
+    protected static function logProcessOutput(Process $process, $name = null)
+    {
+        if ($name === null) {
             $name = self::$processLogCounter;
             self::$processLogCounter++;
         }
-        file_put_contents( self::getBasePath().'/'.get_called_class().'_'.$name.'Output.log', $process->getCommandLine() ."\n\n". $process->getOutput() );
+        file_put_contents(self::getBasePath().'/'.get_called_class().'_'.$name.'Output.log', $process->getCommandLine() ."\n\n". $process->getOutput());
     }
 
     public function assertProcess(Process $process)
@@ -105,4 +108,4 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         $message .= PHP_EOL.'Output:'.PHP_EOL.$process->getOutput();
         $this->assertEquals(0, $process->getExitCode(), $message);
     }
-} 
+}
