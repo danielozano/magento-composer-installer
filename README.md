@@ -204,3 +204,20 @@ Example:
 
 # Notes
 - The extra->magento-root-dir option is no longer supported. It displays only to preseve backward compatibility.
+
+-----
+# New Features:
+
+## Dev Mapping:
+Added new option: map-dev, it will only apply if it's a development installation. Actually composer ask you if it's a dev. install, in the future it will be repaced by command arguments.
+The installation path of the component will be replaced (not copied). Example:
+```json
+   "extra": {
+	   "map-dev": [
+	       [
+		      "*",
+	    	   "Vendor/RepoTest"
+	      ]
+	   ]
+    }
+```
