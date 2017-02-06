@@ -49,6 +49,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
      */
     protected $isForced = false;
 
+    protected $isDevMode = false;
+
     /**
      * The module's base directory
      *
@@ -406,6 +408,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
             return;
         }
 
+        $this->isDevMode = $this->io->askConfirmation("Is dev installation? [y/N]", false);
+
         parent::install($repo, $package);
 
         // skip marshal and apply default behavior if extra->map does not exist
@@ -744,15 +748,18 @@ class Installer extends LibraryInstaller implements InstallerInterface
     {
         $extra = $package->getExtra();
         $moduleSpecificMap = $this->composer->getPackage()->getExtra();
-        if( isset($moduleSpecificMap['magento-map-overwrite']) ){
+        if (isset($moduleSpecificMap['magento-map-overwrite'])) {
             $moduleSpecificMap = $this->transformArrayKeysToLowerCase($moduleSpecificMap['magento-map-overwrite']);
-            if( isset($moduleSpecificMap[$package->getName()]) ){
+            if (isset($moduleSpecificMap[$package->getName()])) {
                 $map = $moduleSpecificMap[$package->getName()];
             }
         }
         $suffix = PackageTypes::$packageTypes[$package->getType()];
         if (isset($map)) {
-            $parser = new MapParser($map, $this->_pathMappingTranslations,$suffix);
+            $parser = new MapParser($map, $this->_pathMappingTranslations, $suffix);
+            return $parser;
+        } elseif (isset($extra['map-dev']) && $this->isDevMode) {
+            $parser = new MapParser($extra['map-dev'], $this->_pathMappingTranslations, $suffix);
             return $parser;
         } elseif (isset($extra['map'])) {
             $parser = new MapParser($extra['map'], $this->_pathMappingTranslations, $suffix);
@@ -766,7 +773,6 @@ class Installer extends LibraryInstaller implements InstallerInterface
         } else {
             throw new \ErrorException('Unable to find deploy strategy for module: no known mapping');
         }
-
     }
 
     /**
@@ -774,6 +780,25 @@ class Installer extends LibraryInstaller implements InstallerInterface
      */
     public function getInstallPath(PackageInterface $package)
     {
+        $packageType = $package->getType();
+        $allowedTypes = array_keys(PackageTypes::$packageTypes);
+
+        if (in_array($packageType, $allowedTypes)
+            && $this->isDevMode
+        ) {
+            // Get custom map
+            $extra = $package->getExtra();
+
+            if (isset($extra['map-dev'])) {
+                $parser = $this->getParser($package);
+                $mappings = $parser->getMappings();
+                $rootDir = $this->magentoRootDir->getPathname();
+                
+                list($source, $dest) = $mappings[0];
+
+                return getcwd().$dest;
+            }
+        }
 
         if (!is_null($this->modmanRootDir) && true === $this->modmanRootDir->isDir()) {
             $targetDir = $package->getTargetDir();
