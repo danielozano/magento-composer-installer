@@ -195,6 +195,8 @@ class Installer extends LibraryInstaller implements InstallerInterface
         if (!empty($extra['path-mapping-translations'])) {
             $this->_pathMappingTranslations = (array)$extra['path-mapping-translations'];
         }
+
+        $this->isDevMode = $this->io->askConfirmation("Is dev installation? [y/N]", false);
     }
 
 
@@ -411,8 +413,6 @@ class Installer extends LibraryInstaller implements InstallerInterface
         if ($package->getType() === 'magento-core' && !$this->preInstallMagentoCore()) {
             return;
         }
-
-        $this->isDevMode = $this->io->askConfirmation("Is dev installation? [y/N]", false);
 
         parent::install($repo, $package);
 
